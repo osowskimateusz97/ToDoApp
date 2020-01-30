@@ -6,19 +6,27 @@ let tasks = JSON.parse(dataJSON);
 const setup = (type, title) => {
 	switch (type) {
 		case 1:
-			tasks = tasks.map((task, index) => ({ id: index + 1, task: task.title }));
+			tasks = tasks.map((task, index) => ({ id: index + 1, title: task.title }));
 			const id = tasks.length + 1;
 			tasks.push({ id, title });
 			dataJSON = JSON.stringify(tasks);
-			fs.writeFileSync('./storageData.json', dataJSON, 'utf8');
+			fs.writeFileSync('./storageData.json', dataJSON);
 			console.log(`Added ${title}`.green);
 			break;
 		case 2:
-			console.log('Deleted');
+			const findIndex = tasks.findIndex((task) => task.title === title);
+			if (findIndex === -1) {
+				console.log('Nie mamy w bazie takiego zadania.'.red);
+			}
+			tasks.splice(findIndex, 1);
+			tasks = tasks.map((task, index) => ({ id: index + 1, title: task.title }));
+			dataJSON = JSON.stringify(tasks);
+			fs.writeFileSync('./storageData.json', dataJSON);
 			break;
 		case 3:
-			console.log('Show tasks');
+			tasks.forEach((task) => console.log(task.title.yellow));
 	}
 };
 
 module.exports = setup;
+console.log(module);
